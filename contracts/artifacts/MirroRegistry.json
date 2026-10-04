@@ -1,0 +1,596 @@
+{
+  "contractName": "MirroRegistry",
+  "sourceFile": "MirroRegistry.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "targetWallet",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "copier",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "activeCopiers",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "totalCopiers",
+          "type": "uint256"
+        }
+      ],
+      "name": "CopierRecorded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "targetWallet",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "copier",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "activeCopiers",
+          "type": "uint256"
+        }
+      ],
+      "name": "CopierRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "fromProtocol",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "toProtocol",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "allocationBps",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "MoveRecorded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "relayer",
+          "type": "address"
+        }
+      ],
+      "name": "RelayerUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "vault",
+          "type": "address"
+        }
+      ],
+      "name": "VaultUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "WalletIndexed",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "getIndexedWallets",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "getMoveCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "getMoveHistory",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "fromProtocol",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "toProtocol",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "allocationBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "note",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct IMirroRegistry.MoveRecord[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "getWalletStats",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "wallet",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalMoves",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "firstSeenTimestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lastActiveTimestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalCopiers",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "activeCopiers",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "isIndexed",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct IMirroRegistry.WalletStats",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "indexWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "indexedWallets",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "moveHistory",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "fromProtocol",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "toProtocol",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "allocationBps",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "note",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "targetWallet",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "copier",
+          "type": "address"
+        }
+      ],
+      "name": "recordCopier",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "fromProtocol",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "toProtocol",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "allocationBps",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "note",
+          "type": "string"
+        }
+      ],
+      "name": "recordMove",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "relayer",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "targetWallet",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "copier",
+          "type": "address"
+        }
+      ],
+      "name": "removeCopier",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_relayer",
+          "type": "address"
+        }
+      ],
+      "name": "setRelayer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_vault",
+          "type": "address"
+        }
+      ],
+      "name": "setVault",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "vault",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "walletStats",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalMoves",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "firstSeenTimestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastActiveTimestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalCopiers",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "activeCopiers",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isIndexed",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600e575f5ffd5b505f80546001600160a01b031916331790556116318061002d5f395ff3fe608060405234801561000f575f5ffd5b5060043610610106575f3560e01c80638931e8281161009e578063c6e5f2871161006e578063c6e5f28714610328578063ed19d7a31461033b578063f1338e1b1461035b578063f2fde38b1461036e578063fbfa77cf14610381575f5ffd5b80638931e828146102815780638da5cb5b146102f0578063b78f025114610302578063c3664d8114610315575f5ffd5b80636817031b116100d95780636817031b1461017557806369be2d5d1461018857806380926dea146101be5780638406c07914610256575f5ffd5b8063119b825b1461010a5780632a9bee861461012857806343940c541461014d5780636548e9bc14610162575b5f5ffd5b610112610394565b60405161011f9190611102565b60405180910390f35b61013b610136366004611168565b6103f4565b60405161011f969594939291906111be565b61016061015b36600461120b565b6104df565b005b61016061017036600461120b565b6105c2565b61016061018336600461120b565b610699565b6101b061019636600461120b565b6001600160a01b03165f9081526005602052604090205490565b60405190815260200161011f565b6102156101cc36600461120b565b600460208190525f918252604090912080546001820154600283015460038401549484015460058501546006909501546001600160a01b03909416959294919390919060ff1687565b604080516001600160a01b0390981688526020880196909652948601939093526060850191909152608084015260a0830152151560c082015260e00161011f565b600154610269906001600160a01b031681565b6040516001600160a01b03909116815260200161011f565b61029461028f36600461120b565b61076d565b60405161011f919081516001600160a01b031681526020808301519082015260408083015190820152606080830151908201526080808301519082015260a0828101519082015260c09182015115159181019190915260e00190565b5f54610269906001600160a01b031681565b61016061031036600461122b565b610822565b61016061032336600461122b565b61095c565b61016061033636600461125c565b610b04565b61034e61034936600461120b565b610d85565b60405161011f9190611315565b6102696103693660046113c7565b610ece565b61016061037c36600461120b565b610ef6565b600254610269906001600160a01b031681565b606060038054806020026020016040519081016040528092919081815260200182805480156103ea57602002820191905f5260205f20905b81546001600160a01b031681526001909101906020018083116103cc575b5050505050905090565b6005602052815f5260405f20818154811061040d575f80fd5b5f9182526020909120600690910201805460018201546002830154600384015460048501546005860180546001600160a01b0396871699509486169750929094169490939290919061045e906113de565b80601f016020809104026020016040519081016040528092919081815260200182805461048a906113de565b80156104d55780601f106104ac576101008083540402835291602001916104d5565b820191905f5260205f20905b8154815290600101906020018083116104b857829003601f168201915b5050505050905086565b6001546001600160a01b031633148061050157505f546001600160a01b031633145b6105525760405162461bcd60e51b815260206004820152601b60248201527f4d6972726f52656769737472793a204f6e6c792072656c61796572000000000060448201526064015b60405180910390fd5b6001600160a01b0381166105b65760405162461bcd60e51b815260206004820152602560248201527f4d6972726f52656769737472793a20496e76616c69642077616c6c6574206164604482015264647265737360d81b6064820152608401610549565b6105bf81610fce565b50565b5f546001600160a01b031633146105eb5760405162461bcd60e51b815260040161054990611416565b6001600160a01b0381166106505760405162461bcd60e51b815260206004820152602660248201527f4d6972726f52656769737472793a20496e76616c69642072656c61796572206160448201526564647265737360d01b6064820152608401610549565b600180546001600160a01b0319166001600160a01b0383169081179091556040517f09bf35b7806e61e7baf86e6547c4221f69d130ccc0a19215d064685a89464a70905f90a250565b5f546001600160a01b031633146106c25760405162461bcd60e51b815260040161054990611416565b6001600160a01b0381166107245760405162461bcd60e51b8152602060048201526024808201527f4d6972726f52656769737472793a20496e76616c6964207661756c74206164646044820152637265737360e01b6064820152608401610549565b600280546001600160a01b0319166001600160a01b0383169081179091556040517f161584aed96e7f34998117c9ad67e2d21ff46d2a42775c22b11ed282f3c7b2cd905f90a250565b6107b16040518060e001604052805f6001600160a01b031681526020015f81526020015f81526020015f81526020015f81526020015f81526020015f151581525090565b506001600160a01b039081165f90815260046020818152604092839020835160e08101855281549095168552600181015491850191909152600281015492840192909252600382015460608401528101546080830152600581015460a08301526006015460ff16151560c082015290565b6002546001600160a01b031633148061084457505f546001600160a01b031633145b61088c5760405162461bcd60e51b8152602060048201526019602482015278135a5c9c9bd49959da5cdd1c9e4e8813db9b1e481d985d5b1d603a1b6044820152606401610549565b6001600160a01b0382166108b25760405162461bcd60e51b81526004016105499061144d565b6001600160a01b0382165f9081526004602052604090206005015415610903576001600160a01b0382165f9081526004602052604081206005018054600192906108fd9084906114a5565b90915550505b6001600160a01b038281165f81815260046020908152604091829020600501549151918252928416927fc2d4e212285b6bd3fe4f1a2ce6963fe56c407c20adc3efc5b7f9c38230a1c22091015b60405180910390a35050565b6002546001600160a01b031633148061097e57505f546001600160a01b031633145b6109c65760405162461bcd60e51b8152602060048201526019602482015278135a5c9c9bd49959da5cdd1c9e4e8813db9b1e481d985d5b1d603a1b6044820152606401610549565b6001600160a01b0382166109ec5760405162461bcd60e51b81526004016105499061144d565b6109f582610fce565b6001600160a01b0382165f908152600460205260408120600501805460019290610a209084906114be565b90915550506001600160a01b038083165f9081526006602090815260408083209385168352929052205460ff16610aab576001600160a01b038083165f8181526006602090815260408083209486168352938152838220805460ff19166001908117909155928252600490819052928120909201805491929091610aa59084906114be565b90915550505b6001600160a01b038281165f818152600460208181526040928390206005810154920154835192835290820152928416927fd7ae4b1917ebe46979000f582140e5327173ac0bb20373744928898c492358969101610950565b6001546001600160a01b0316331480610b2657505f546001600160a01b031633145b610b725760405162461bcd60e51b815260206004820152601b60248201527f4d6972726f52656769737472793a204f6e6c792072656c6179657200000000006044820152606401610549565b6001600160a01b038716610bc85760405162461bcd60e51b815260206004820152601d60248201527f4d6972726f52656769737472793a20496e76616c69642077616c6c65740000006044820152606401610549565b610bd187610fce565b6001600160a01b0387165f9081526004602052604081206001908101805491929091610bfe9084906114be565b90915550506001600160a01b038088165f9081526004602090815260408083204260039091018190556005835292819020815160c0810183528b861681528a861681850152948916858301526060850188905260808501939093528051601f860183900483028101830190915284815291929160a083019186908690819084018382808284375f920182905250939094525050835460018082018655948252602091829020845160069092020180546001600160a01b03199081166001600160a01b039384161782559285015195810180548416968316969096179095556040840151600286018054909316911617905550606081015160038301556080810151600483015560a08101519091906005820190610d1b908261153c565b5050604080516001600160a01b038981168252888116602083015287811682840152606082018790524260808301529151918a1692507f10fa3144a113fa6058e83442848d029ae1292dcb5955c1e1dff34c9f1e27bc67919081900360a00190a250505050505050565b6001600160a01b0381165f908152600560209081526040808320805482518185028101850190935280835260609492939192909184015b82821015610ec3575f8481526020908190206040805160c0810182526006860290920180546001600160a01b0390811684526001820154811694840194909452600281015490931690820152600382015460608201526004820154608082015260058201805491929160a084019190610e34906113de565b80601f0160208091040260200160405190810160405280929190818152602001828054610e60906113de565b8015610eab5780601f10610e8257610100808354040283529160200191610eab565b820191905f5260205f20905b815481529060010190602001808311610e8e57829003601f168201915b50505050508152505081526020019060010190610dbc565b505050509050919050565b60038181548110610edd575f80fd5b5f918252602090912001546001600160a01b0316905081565b5f546001600160a01b03163314610f1f5760405162461bcd60e51b815260040161054990611416565b6001600160a01b038116610f755760405162461bcd60e51b815260206004820181905260248201527f4d6972726f52656769737472793a20496e76616c6964206e6577206f776e65726044820152606401610549565b5f80546040516001600160a01b03808516939216917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e091a35f80546001600160a01b0319166001600160a01b0392909216919091179055565b6001600160a01b0381165f9081526004602052604090206006015460ff166105bf5760038054600180820183557fc2575a0e9e593c00f959f8c92f12db2869c3395a3b0502d05e2516446f71f85b90910180546001600160a01b038581166001600160a01b031992831681179093556040805160e0810182528481525f602080830182815242848601818152606086018281526080870186815260a0880187815260c089018e81528d89526004808952988b902099518a549c169b909c169a909a17885593519b87019b909b555160028601559851998401999099559751908201559151600583015591516006909101805491151560ff1990921691909117905551918252917f411a93024b56af64377feb5082211d1e6a9256e54fb5c0cde53e2633d6c16656910160405180910390a250565b602080825282518282018190525f918401906040840190835b818110156111425783516001600160a01b031683526020938401939092019160010161111b565b509095945050505050565b80356001600160a01b0381168114611163575f5ffd5b919050565b5f5f60408385031215611179575f5ffd5b6111828361114d565b946020939093013593505050565b5f81518084528060208401602086015e5f602082860101526020601f19601f83011685010191505092915050565b6001600160a01b038781168252868116602083015285166040820152606081018490526080810183905260c060a082018190525f906111ff90830184611190565b98975050505050505050565b5f6020828403121561121b575f5ffd5b6112248261114d565b9392505050565b5f5f6040838503121561123c575f5ffd5b6112458361114d565b91506112536020840161114d565b90509250929050565b5f5f5f5f5f5f5f60c0888a031215611272575f5ffd5b61127b8861114d565b96506112896020890161114d565b95506112976040890161114d565b94506112a56060890161114d565b93506080880135925060a088013567ffffffffffffffff8111156112c7575f5ffd5b8801601f81018a136112d7575f5ffd5b803567ffffffffffffffff8111156112ed575f5ffd5b8a60208284010111156112fe575f5ffd5b602082019350809250505092959891949750929550565b5f602082016020835280845180835260408501915060408160051b8601019250602086015f5b828110156113bb57868503603f19018452815180516001600160a01b03908116875260208083015182169088015260408083015190911690870152606080820151908701526080808201519087015260a09081015160c0918701829052906113a590870182611190565b955050602093840193919091019060010161133b565b50929695505050505050565b5f602082840312156113d7575f5ffd5b5035919050565b600181811c908216806113f257607f821691505b60208210810361141057634e487b7160e01b5f52602260045260245ffd5b50919050565b60208082526019908201527f4d6972726f52656769737472793a204f6e6c79206f776e657200000000000000604082015260600190565b60208082526024908201527f4d6972726f52656769737472793a20496e76616c6964207461726765742077616040820152631b1b195d60e21b606082015260800190565b634e487b7160e01b5f52601160045260245ffd5b818103818111156114b8576114b8611491565b92915050565b808201808211156114b8576114b8611491565b634e487b7160e01b5f52604160045260245ffd5b601f821115611537578282111561153757805f5260205f20601f840160051c602085101561151057505f5b90810190601f840160051c035f5b81811015611533575f8382015560010161151e565b5050505b505050565b815167ffffffffffffffff811115611556576115566114d1565b61156a8161156484546113de565b846114e5565b6020601f82116001811461159c575f83156115855750848201515b5f19600385901b1c1916600184901b1784556115f4565b5f84815260208120601f198516915b828110156115cb57878501518255602094850194600190920191016115ab565b50848210156115e857868401515f19600387901b60f8161c191681555b505060018360011b0184555b505050505056fea26469706673582212208529dd8147fad6b9efdcb982f4c27a1fc74179bad4d7f9daddc5d159b9506bcb64736f6c63430008250033"
+}

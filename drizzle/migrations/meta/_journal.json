@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790479521187,
+      "tag": "0000_create_mirro_chat_messages",
+      "breakpoints": true
+    }
+  ]
+}
