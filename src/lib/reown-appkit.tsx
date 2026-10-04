@@ -5,6 +5,9 @@
  * full RPC URLs ('chainDefault') and Arbiscan explorer metadata.
  */
 
+import { initSsrShims } from "./ssr-shim";
+initSsrShims();
+
 import { createAppKit } from "@reown/appkit/react";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { defineChain } from "@reown/appkit/networks";

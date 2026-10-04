@@ -1,3 +1,6 @@
+import { initSsrShims } from "./lib/ssr-shim";
+initSsrShims();
+
 import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
