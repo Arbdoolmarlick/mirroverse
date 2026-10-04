@@ -94,7 +94,11 @@ export const appKit = createAppKit({
       typeof window !== "undefined" && window.location?.origin
         ? window.location.origin
         : "https://mirro.fi",
-    icons: ["https://mirro.fi/favicon.ico"],
+    icons: [
+      typeof window !== "undefined" && window.location?.origin
+        ? `${window.location.origin}/favicon.png`
+        : "https://mirro.fi/favicon.png",
+    ],
   },
   themeMode: "light",
   themeVariables: {
